@@ -19,8 +19,7 @@ Route::get('/', function () {
 
 
 Auth::routes();
-Route::get('/dashboard', function () {
-    return view('welcome');
-});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/customer', 'CustomerController');

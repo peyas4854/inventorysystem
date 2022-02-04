@@ -23,7 +23,7 @@
                 data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a class="nav-link {{ (request()->is('home*')) ? 'active' : '' }}" href="{{ url('home') }}">
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p> Dashboard</p>
                     </a>
@@ -40,8 +40,8 @@
                         <p> Product</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item ">
+                    <a  href="{{ url('customer') }}" class="nav-link {{ (request()->is('customer*')) ? 'active' : '' }}" >
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p> Customer</p>
                     </a>
