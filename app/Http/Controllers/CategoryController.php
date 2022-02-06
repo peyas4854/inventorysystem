@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CustomerController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,11 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::orderby('id', 'desc')->paginate(10);
-        return view('pages.customer.index', compact('customers'));
+        $categories = Category::with('children')->whereNull('parent_id')->get();
+
+        return view('pages.category.index')->with([
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -25,7 +28,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('pages.customer.create');
+        //
     }
 
     /**
@@ -36,9 +39,15 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        Customer::create($request->all());
-        return redirect('/customer');
 
+        $validatedData = $this->validate($request, [
+            'name'      => 'required|min:3|max:255|string',
+            'parent_id' => 'sometimes|nullable|numeric'
+        ]);
+
+        Category::create($validatedData);
+
+        return redirect()->route('category.index')->withSuccess('You have successfully created a Category!');
     }
 
     /**
@@ -70,9 +79,15 @@ class CustomerController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $validatedData = $this->validate($request, [
+            'name' => 'required|string'
+        ]);
+
+        $category->update($validatedData);
+
+        return redirect()->route('category.index')->withSuccess('You have successfully updated a Category!');
     }
 
     /**
@@ -81,8 +96,9 @@ class CustomerController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('category.index')->withSuccess('You have successfully deleted a Category!');
     }
 }

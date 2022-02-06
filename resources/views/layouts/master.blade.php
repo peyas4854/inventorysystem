@@ -26,8 +26,17 @@
     <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    @yield('head')
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
+
+
+
 <div class="wrapper">
 
     <!-- Preloader -->
@@ -56,7 +65,9 @@
     </aside>
     <!-- /.control-sidebar -->
 </div>
+
 <!-- ./wrapper -->
+<script src="https://www.google.com/recaptcha/api.js?" async defer></script>
 
 <!-- jQuery -->
 <script src="{{asset('/plugins/jquery/jquery.min.js')}}"></script>
@@ -91,7 +102,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-
 <script src="{{ asset('/js/pages/dashboard.js') }}"></script>
+@yield('scripts')
 </body>
 </html>
