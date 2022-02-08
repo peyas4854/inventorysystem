@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,11 +15,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('children')->whereNull('parent_id')->get();
+         $products = Product::with('category')->get();
 
-        return view('pages.category.index')->with([
-            'categories' => $categories
-        ]);
+        return view('pages.product.index',compact('products'));
     }
 
     /**
@@ -28,7 +27,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+         $categories = Category::query()->select('name', 'id')->get();
+        return view('pages.product.create', compact('categories'));
     }
 
     /**
@@ -39,15 +39,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-
-        $validatedData = $this->validate($request, [
-            'name'      => 'required|max:255|string',
-            'parent_id' => 'sometimes|nullable|numeric'
+        $product = Product::create([
+            'user_id'=>auth()->user()->id,
+            'name'=>$request->name,
+            'slug'=> \Str::slug($request->name),
+            'description'=>$request->description,
         ]);
-
-        Category::create($validatedData);
-
-        return redirect()->route('category.index')->withSuccess('You have successfully created a Category!');
+        $product->category()->sync((array)($request->categories));
+        return redirect()->route('product.index')->withSuccess('You have successfully created a Product!');
     }
 
     /**
@@ -79,15 +78,9 @@ class CategoryController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        $validatedData = $this->validate($request, [
-            'name' => 'required|string'
-        ]);
-
-        $category->update($validatedData);
-
-        return redirect()->route('category.index')->withSuccess('You have successfully updated a Category!');
+        //
     }
 
     /**
@@ -96,9 +89,8 @@ class CategoryController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        $category->delete();
-        return redirect()->route('category.index')->withSuccess('You have successfully deleted a Category!');
+        //
     }
 }
